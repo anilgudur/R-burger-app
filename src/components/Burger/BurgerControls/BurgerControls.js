@@ -23,7 +23,11 @@ const burgerControls = props => (
         disabledInfo={props.disabledInfoArr[el.type]}
       />
     ))}
-    <button className={classes.OrderButton} disabled={!props.isPurchasable}>
+    <button
+      className={classes.OrderButton}
+      disabled={!props.isPurchasable}
+      onClick={props.purchasingClick}
+    >
       ORDER NOW
     </button>
   </div>
