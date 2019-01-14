@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const instance = axios.create({
+const axiosOrderInstance = axios.create({
   baseURL: "https://r-burger-app.firebaseio.com"
 });
 
-export default instance;
+export default axiosOrderInstance;

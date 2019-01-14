@@ -7,17 +7,27 @@ const error = (WrappedComponent, axios) => {
       errorObj: null
     };
 
-    componentDidMount() {
-      axios.interceptors.request.use(response => {
+    componentWillMount() {
+      this.requestInterceptor = axios.interceptors.request.use(response => {
         this.setState({ errorObj: null });
+        console.log("[error] request response: ", response);
         return response;
       });
-      axios.interceptors.response.use(
-        response => response,
+      this.responseInterceptor = axios.interceptors.response.use(
+        response => {
+          console.log("[error] response response: ", response);
+          return response;
+        },
         err => {
           this.setState({ errorObj: err });
+          console.log("[error] err: ", err);
         }
       );
+    }
+
+    componentWillUnmount() {
+      axios.interceptors.request.eject(this.requestInterceptor);
+      axios.interceptors.response.eject(this.responseInterceptor);
     }
 
     modalBackdropHandler() {
