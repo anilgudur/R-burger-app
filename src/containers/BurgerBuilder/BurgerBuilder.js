@@ -31,6 +31,10 @@ class BurgerBuilder extends Component {
   };
 
   componentDidMount() {
+    console.log(
+      "[BurgerBuilder.js] - componentDidMount - this.props: ",
+      this.props
+    );
     this.setState({ isLoading: true });
     axiosOrder
       .get("/ingredients.json")
@@ -97,7 +101,7 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler() {
-    this.setState({ isLoading: true });
+    /*this.setState({ isLoading: true });
     const orderData = {
       ingredients: this.state.ingredients,
       price: this.state.totalPrice,
@@ -121,7 +125,8 @@ class BurgerBuilder extends Component {
       })
       .catch(err => {
         this.setState({ isLoading: false, isPurchasing: false });
-      });
+      });*/
+    this.props.history.push("/checkout");
   }
 
   render() {
