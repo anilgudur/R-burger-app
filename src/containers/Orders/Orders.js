@@ -15,7 +15,7 @@ class Orders extends Component {
       .then(res => {
         const orderList = [];
         for (let key in res.data) {
-          orderList.push(res.data[key]);
+          //orderList.push(res.data[key]);
           orderList.push({
             ...res.data[key],
             id: key
@@ -37,8 +37,13 @@ class Orders extends Component {
   render() {
     return (
       <div>
-        <Order />
-        <Order />
+        {this.state.orderList.map((order, index) => (
+          <Order
+            key={order.id}
+            ingredients={order.ingredients}
+            finalPrice={order.price}
+          />
+        ))}
       </div>
     );
   }
