@@ -13,6 +13,59 @@ class ContactDataContainer extends Component {
       street: "",
       postalCode: ""
     },
+    orderForm: {
+        name: {
+          elementType: "input",
+          elementConfig: {
+            type: "text",
+            placeholder: "Your Name"
+          },
+          value: ""
+        },
+        street: {
+          elementType: "input",
+          elementConfig: {
+            type: "text",
+            placeholder: "Street"
+          },
+          value: ""
+        },
+        zipCode: {
+          elementType: "input",
+          elementConfig: {
+            type: "text",
+            placeholder: "Zip Code"
+          },
+          value: ""
+        },
+        country: {
+          elementType: "input",
+          elementConfig: {
+            type: "text",
+            placeholder: "Country"
+          },
+          value: ""
+        },
+        email: {
+          elementType: "input",
+          elementConfig: {
+            type: "email",
+            placeholder: "Your Email"
+          },
+          value: ""
+        },
+        type: {
+          elementType: "select",
+          elementConfig: {
+            options: [
+              {name: "Fastest", value: "fastest"},
+              {name: "Cheapest", value: "cheapest"}
+            ]
+          },
+          value: ""
+        },
+    },
+
     isLoading: false
   };
 
@@ -48,32 +101,26 @@ class ContactDataContainer extends Component {
   }
 
   render() {
+    const formEleArray = [];
+    for (let key in this.state.orderForm) {
+      formEleArray.push({
+        id: key,
+        config: this.state.orderForm[key]
+      });
+    }
+
     let comp = (
       <form>
-        <Input
-          type='text'
-          inputtype="input"
-          name='name'
-          placeholder='Your Name'
-        />
-        <Input
-          type='text'
-          inputtype="input"
-          name='email'
-          placeholder='Your Email'
-        />
-        <Input
-          type='text'
-          inputtype="input"
-          name='street'
-          placeholder='street'
-        />
-        <Input
-          type='text'
-          inputtype="input"
-          name='postalCode'
-          placeholder='Postal Code'
-        />
+        {
+          formEleArray.map(formEle => (
+            <Input
+              key={formEle.id}
+              elementType={formEle.config.elementType}
+              elementConfig={formEle.config.elementConfig}
+              value={formEle.config.value}
+            />
+          ))
+        }
         <Button buttonType='Success' onClick={this.onOrderClick.bind(this)}>
           ORDER
         </Button>
