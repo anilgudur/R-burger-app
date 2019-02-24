@@ -20,7 +20,11 @@ class ContactDataContainer extends Component {
           type: "text",
           placeholder: "Your Name"
         },
-        value: ""
+        value: "",
+        validationRules: {
+          required: true
+        },
+        isValid: false
       },
       street: {
         elementType: "input",
@@ -28,7 +32,11 @@ class ContactDataContainer extends Component {
           type: "text",
           placeholder: "Street"
         },
-        value: ""
+        value: "",
+        validationRules: {
+          required: true
+        },
+        isValid: false
       },
       zipCode: {
         elementType: "input",
@@ -36,7 +44,13 @@ class ContactDataContainer extends Component {
           type: "text",
           placeholder: "Zip Code"
         },
-        value: ""
+        value: "",
+        validationRules: {
+          required: true,
+          minLength: 5,
+          maxLength: 5
+        },
+        isValid: false
       },
       country: {
         elementType: "input",
@@ -44,7 +58,11 @@ class ContactDataContainer extends Component {
           type: "text",
           placeholder: "Country"
         },
-        value: ""
+        value: "",
+        validationRules: {
+          required: true
+        },
+        isValid: false
       },
       email: {
         elementType: "input",
@@ -52,7 +70,11 @@ class ContactDataContainer extends Component {
           type: "email",
           placeholder: "Your Email"
         },
-        value: ""
+        value: "",
+        validationRules: {
+          required: true
+        },
+        isValid: false
       },
       type: {
         elementType: "select",
@@ -69,13 +91,55 @@ class ContactDataContainer extends Component {
     isLoading: false
   };
 
+  checkValidity(value, rules) {
+    let isValid = true;
+    if (rules.required) {
+      isValid = value.trim() !== "" && isValid;
+    }
+
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength && isValid;
+    }
+
+    if (rules.maxLength) {
+      isValid = value.length <= rules.maxLength && isValid;
+    }
+
+    return isValid;
+  }
+
   onOrderClick(event) {
     event.preventDefault();
     console.log("CLICKED ORDER:", this.props.ingredients);
     this.setState({ isLoading: true });
+
+    const formData = {};
+    for (let formElementIdentifier in this.state.orderForm) {
+      formData[formElementIdentifier] = this.state.orderForm[
+        formElementIdentifier
+      ].value;
+    }
+
+    // const orderData = {
+    //   ingredients: this.props.ingredients,
+    //   price: this.props.totalPrice,
+    //   customer: {
+    //     name: "Anil Gudur",
+    //     address: {
+    //       street: "Teststreet 1",
+    //       zipCode: "32154",
+    //       country: "INDIA"
+    //     },
+    //     email: "test@test.com"
+    //   },
+    //   delivery: {
+    //     type: "fastest"
+    //   }
+    // };
     const orderData = {
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
+      orderData: formData,
       customer: {
         name: "Anil Gudur",
         address: {
@@ -89,6 +153,7 @@ class ContactDataContainer extends Component {
         type: "fastest"
       }
     };
+
     axiosOrder
       .post("/orders.json", orderData)
       .then(response => {
@@ -105,6 +170,11 @@ class ContactDataContainer extends Component {
     const updatedOrderForm = { ...this.state.orderForm };
     const updatedFormElement = { ...updatedOrderForm[inputIdentifier] };
     updatedFormElement.value = event.target.value;
+    updatedFormElement.isValid = this.checkValidity(
+      updatedFormElement.value,
+      updatedFormElement.validationRules
+    );
+    console.log(updatedFormElement);
     updatedOrderForm[inputIdentifier] = updatedFormElement;
     this.setState({ orderForm: updatedOrderForm });
   }
@@ -119,7 +189,7 @@ class ContactDataContainer extends Component {
     }
 
     let comp = (
-      <form>
+      <form onSubmit={this.onOrderClick.bind(this)}>
         {formEleArray.map(formEle => (
           <Input
             key={formEle.id}
@@ -129,9 +199,7 @@ class ContactDataContainer extends Component {
             onChangeHandler={event => this.onChangeHandler(event, formEle.id)}
           />
         ))}
-        <Button buttonType='Success' onClick={this.onOrderClick.bind(this)}>
-          ORDER
-        </Button>
+        <Button buttonType='Success'>ORDER</Button>
       </form>
     );
     if (this.state.isLoading) {
