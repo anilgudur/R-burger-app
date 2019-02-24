@@ -14,56 +14,56 @@ class ContactDataContainer extends Component {
       postalCode: ""
     },
     orderForm: {
-        name: {
-          elementType: "input",
-          elementConfig: {
-            type: "text",
-            placeholder: "Your Name"
-          },
-          value: ""
+      name: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "Your Name"
         },
-        street: {
-          elementType: "input",
-          elementConfig: {
-            type: "text",
-            placeholder: "Street"
-          },
-          value: ""
+        value: ""
+      },
+      street: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "Street"
         },
-        zipCode: {
-          elementType: "input",
-          elementConfig: {
-            type: "text",
-            placeholder: "Zip Code"
-          },
-          value: ""
+        value: ""
+      },
+      zipCode: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "Zip Code"
         },
-        country: {
-          elementType: "input",
-          elementConfig: {
-            type: "text",
-            placeholder: "Country"
-          },
-          value: ""
+        value: ""
+      },
+      country: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "Country"
         },
-        email: {
-          elementType: "input",
-          elementConfig: {
-            type: "email",
-            placeholder: "Your Email"
-          },
-          value: ""
+        value: ""
+      },
+      email: {
+        elementType: "input",
+        elementConfig: {
+          type: "email",
+          placeholder: "Your Email"
         },
-        type: {
-          elementType: "select",
-          elementConfig: {
-            options: [
-              {name: "Fastest", value: "fastest"},
-              {name: "Cheapest", value: "cheapest"}
-            ]
-          },
-          value: ""
+        value: ""
+      },
+      type: {
+        elementType: "select",
+        elementConfig: {
+          options: [
+            { name: "Fastest", value: "fastest" },
+            { name: "Cheapest", value: "cheapest" }
+          ]
         },
+        value: "cheapest"
+      }
     },
 
     isLoading: false
@@ -100,6 +100,15 @@ class ContactDataContainer extends Component {
       });
   }
 
+  onChangeHandler(event, inputIdentifier) {
+    console.log("On Change", event.target.value);
+    const updatedOrderForm = { ...this.state.orderForm };
+    const updatedFormElement = { ...updatedOrderForm[inputIdentifier] };
+    updatedFormElement.value = event.target.value;
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
+    this.setState({ orderForm: updatedOrderForm });
+  }
+
   render() {
     const formEleArray = [];
     for (let key in this.state.orderForm) {
@@ -111,16 +120,15 @@ class ContactDataContainer extends Component {
 
     let comp = (
       <form>
-        {
-          formEleArray.map(formEle => (
-            <Input
-              key={formEle.id}
-              elementType={formEle.config.elementType}
-              elementConfig={formEle.config.elementConfig}
-              value={formEle.config.value}
-            />
-          ))
-        }
+        {formEleArray.map(formEle => (
+          <Input
+            key={formEle.id}
+            elementType={formEle.config.elementType}
+            elementConfig={formEle.config.elementConfig}
+            value={formEle.config.value}
+            onChangeHandler={event => this.onChangeHandler(event, formEle.id)}
+          />
+        ))}
         <Button buttonType='Success' onClick={this.onOrderClick.bind(this)}>
           ORDER
         </Button>
