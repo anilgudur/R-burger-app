@@ -24,7 +24,9 @@ class ContactDataContainer extends Component {
         validationRules: {
           required: true
         },
-        isValid: false
+        isValid: false,
+        isTouched: false,
+        valueType: "name"
       },
       street: {
         elementType: "input",
@@ -36,7 +38,9 @@ class ContactDataContainer extends Component {
         validationRules: {
           required: true
         },
-        isValid: false
+        isValid: false,
+        isTouched: false,
+        valueType: "street"
       },
       zipCode: {
         elementType: "input",
@@ -50,7 +54,9 @@ class ContactDataContainer extends Component {
           minLength: 5,
           maxLength: 5
         },
-        isValid: false
+        isValid: false,
+        isTouched: false,
+        valueType: "zip code"
       },
       country: {
         elementType: "input",
@@ -62,7 +68,9 @@ class ContactDataContainer extends Component {
         validationRules: {
           required: true
         },
-        isValid: false
+        isValid: false,
+        isTouched: false,
+        valueType: "country"
       },
       email: {
         elementType: "input",
@@ -74,7 +82,9 @@ class ContactDataContainer extends Component {
         validationRules: {
           required: true
         },
-        isValid: false
+        isValid: false,
+        isTouched: false,
+        valueType: "email"
       },
       type: {
         elementType: "select",
@@ -84,11 +94,14 @@ class ContactDataContainer extends Component {
             { name: "Cheapest", value: "cheapest" }
           ]
         },
-        value: "cheapest"
+        value: "cheapest",
+        validationRules: {},
+        isValid: true
       }
     },
 
-    isLoading: false
+    isLoading: false,
+    isFormValid: false
   };
 
   checkValidity(value, rules) {
@@ -174,9 +187,15 @@ class ContactDataContainer extends Component {
       updatedFormElement.value,
       updatedFormElement.validationRules
     );
-    console.log(updatedFormElement);
+    updatedFormElement.isTouched = true;
     updatedOrderForm[inputIdentifier] = updatedFormElement;
-    this.setState({ orderForm: updatedOrderForm });
+
+    let isFormValid = true;
+    for (let inputIdentifier in updatedOrderForm) {
+      isFormValid = updatedOrderForm[inputIdentifier].isValid && isFormValid;
+    }
+
+    this.setState({ orderForm: updatedOrderForm, isFormValid: isFormValid });
   }
 
   render() {
@@ -197,9 +216,15 @@ class ContactDataContainer extends Component {
             elementConfig={formEle.config.elementConfig}
             value={formEle.config.value}
             onChangeHandler={event => this.onChangeHandler(event, formEle.id)}
+            isValid={formEle.config.isValid}
+            shouldValidate={!!formEle.config.validationRules}
+            isTouched={formEle.config.isTouched}
+            valueType={formEle.config.valueType}
           />
         ))}
-        <Button buttonType='Success'>ORDER</Button>
+        <Button buttonType='Success' disabled={!this.state.isFormValid}>
+          ORDER
+        </Button>
       </form>
     );
     if (this.state.isLoading) {
