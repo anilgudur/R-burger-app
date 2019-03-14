@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
 import Button from "../../../components/UI/Button/Button";
 import classes from "./ContactDataContainer.module.css";
 import axiosOrder from "../../../axios-orders";
@@ -123,7 +125,7 @@ class ContactDataContainer extends Component {
 
   onOrderClick(event) {
     event.preventDefault();
-    console.log("CLICKED ORDER:", this.props.ingredients);
+    console.log("CLICKED ORDER:", this.props.ings);
     this.setState({ isLoading: true });
 
     const formData = {};
@@ -150,7 +152,7 @@ class ContactDataContainer extends Component {
     //   }
     // };
     const orderData = {
-      ingredients: this.props.ingredients,
+      ingredients: this.props.ings,
       price: this.props.totalPrice,
       orderData: formData,
       customer: {
@@ -239,4 +241,11 @@ class ContactDataContainer extends Component {
   }
 }
 
-export default ContactDataContainer;
+const mapStateToProps = state => {
+  return {
+    ings: state.ingredients,
+    totalPrice: state.totalPrice
+  };
+};
+
+export default connect(mapStateToProps)(ContactDataContainer);

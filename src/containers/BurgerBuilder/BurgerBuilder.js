@@ -10,13 +10,6 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import Error from "../../hoc/Error/Error";
 import * as actionTypes from "../../store/action.constant";
 
-const INGREDIENT_PRICES = {
-  salad: 0.5,
-  bacon: 0.7,
-  cheese: 0.4,
-  meat: 1.3
-};
-
 class BurgerBuilder extends Component {
   state = {
     // ingredients: {
@@ -26,8 +19,8 @@ class BurgerBuilder extends Component {
     //   meat: 0
     // },
     //ingredients: null,
-    totalPrice: 4,
-    isPurchasable: false,
+    //totalPrice: 4,
+    //isPurchasable: false,
     isPurchasing: false,
     isLoading: false,
     isError: false
@@ -49,6 +42,7 @@ class BurgerBuilder extends Component {
     //   });
   }
 
+  /*
   addIngredientHandler = type => {
     const oldCount = this.state.ingredients[type];
     const updatedCount = oldCount + 1;
@@ -83,6 +77,7 @@ class BurgerBuilder extends Component {
     this.setState({ ingredients: updatedIngredients, totalPrice: newPrice });
     this.updatePurchaseState(updatedIngredients);
   };
+  */
 
   updatePurchaseState(ingredients) {
     const sum = Object.keys(ingredients)
@@ -92,7 +87,8 @@ class BurgerBuilder extends Component {
       .reduce((sum, el) => {
         return sum + el;
       }, 0);
-    this.setState({ isPurchasable: sum > 0 });
+    //this.setState({ isPurchasable: sum > 0 });
+    return sum > 0;
   }
 
   purchasingHandler = () => {
@@ -130,20 +126,22 @@ class BurgerBuilder extends Component {
         this.setState({ isLoading: false, isPurchasing: false });
       });*/
     //this.props.history.push("/checkout");
-    const queryParams = [];
-    for (let i in this.state.ingredients) {
-      queryParams.push(
-        encodeURIComponent(i) +
-          "=" +
-          encodeURIComponent(this.state.ingredients[i])
-      );
-    }
-    queryParams.push("totalPrice=" + this.state.totalPrice);
-    const queryString = queryParams.join("&");
-    this.props.history.push({
-      pathname: "/checkout",
-      search: "?" + queryString
-    });
+
+    // #Query param code
+    // const queryParams = [];
+    // for (let i in this.props.ings) {
+    //   queryParams.push(
+    //     encodeURIComponent(i) + "=" + encodeURIComponent(this.props.ings[i])
+    //   );
+    // }
+    // queryParams.push("totalPrice=" + this.props.totalPrice);
+    // const queryString = queryParams.join("&");
+    // this.props.history.push({
+    //   pathname: "/checkout",
+    //   search: "?" + queryString
+    // });
+
+    this.props.history.push("/checkout");
   }
 
   render() {
@@ -167,8 +165,9 @@ class BurgerBuilder extends Component {
             addIngredientClick={this.props.addIngredientAction}
             removeIngredientClick={this.props.removeIngredientAction}
             disabledInfoArr={disabledInfo}
-            price={this.state.totalPrice}
-            isPurchasable={this.state.isPurchasable}
+            price={this.props.totalPrice}
+            //isPurchasable={this.state.isPurchasable}
+            isPurchasable={this.updatePurchaseState(this.props.ings)}
             purchasingClick={this.purchasingHandler}
           />
         </>
@@ -176,7 +175,7 @@ class BurgerBuilder extends Component {
       orderSummary = (
         <OrderSummary
           ingredients={this.props.ings}
-          totalPrice={this.state.totalPrice}
+          totalPrice={this.props.totalPrice}
           closeModal={this.closeModal}
           purchaseContinueClick={this.purchaseContinueHandler.bind(this)}
           isModalShow={this.state.isPurchasing}
@@ -200,7 +199,8 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients
+    ings: state.ingredients,
+    totalPrice: state.totalPrice
   };
 };
 
