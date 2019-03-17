@@ -21,9 +21,9 @@ class BurgerBuilder extends Component {
     //ingredients: null,
     //totalPrice: 4,
     //isPurchasable: false,
-    isPurchasing: false,
-    isLoading: false,
-    isError: false
+    isPurchasing: false
+    //isLoading: false,
+    //isError: false
   };
 
   componentDidMount() {
@@ -40,6 +40,7 @@ class BurgerBuilder extends Component {
     //   .catch(err => {
     //     this.setState({ isLoading: false, isError: true });
     //   });
+    this.props.oninitIngredientsAction();
   }
 
   /*
@@ -151,7 +152,7 @@ class BurgerBuilder extends Component {
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
-    let burgerContent = this.state.isError ? (
+    let burgerContent = this.props.isError ? (
       <p>Ingredients can't be loaded.</p>
     ) : (
       <Spinner />
@@ -182,9 +183,9 @@ class BurgerBuilder extends Component {
         />
       );
     }
-    if (this.state.isLoading) {
-      orderSummary = <Spinner />;
-    }
+    // if (this.state.isLoading) {
+    //   orderSummary = <Spinner />;
+    // }
 
     return (
       <>
@@ -200,7 +201,8 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
   return {
     ings: state.ingredients,
-    totalPrice: state.totalPrice
+    totalPrice: state.totalPrice,
+    isError: state.store_isError
   };
 };
 
@@ -209,7 +211,9 @@ const mapDispatchToProps = dispatch => {
     addIngredientAction: ingredientName =>
       dispatch(burgerBuilderActions.addIngredient(ingredientName)),
     removeIngredientAction: ingredientName =>
-      dispatch(burgerBuilderActions.removeIngredient(ingredientName))
+      dispatch(burgerBuilderActions.removeIngredient(ingredientName)),
+    oninitIngredientsAction: () =>
+      dispatch(burgerBuilderActions.initIngredients())
   };
 };
 
