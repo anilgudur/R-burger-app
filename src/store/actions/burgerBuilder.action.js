@@ -24,7 +24,7 @@ export const setIngredients = ingredients => {
 export const initIngredients = () => {
   return dispatch => {
     axiosOrder
-      .get("/ingredients.jsons")
+      .get("/ingredients.json")
       .then(response => {
         //this.setState({ ingredients: response.data, isLoading: false });
         dispatch(setIngredients(response.data));
