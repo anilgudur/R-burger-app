@@ -10,7 +10,7 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import Error from "../../hoc/Error/Error";
 import * as burgerBuilderActions from "../../store/actions/burgerBuilder.action";
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
   state = {
     // ingredients: {
     //   salad: 0,
